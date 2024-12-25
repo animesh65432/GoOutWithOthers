@@ -1,25 +1,17 @@
 import "dotenv/config"
 import express from "express"
-
-
+import cokkieparser from "cookie-parser"
+import { userrouter } from "./routers"
 const app = express()
 
-app.get("/", async (req, res) => {
-    try {
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cokkieparser())
+app.use("/user", userrouter)
 
-        res.status(401).json({
-            error: "User must sign in"
-        });
-        return;
-    } catch (error) {
 
-        res.status(500).json({
-            message: "Internal Server Error"
-        })
-        return
 
-    }
-})
+
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port ${process.env.PORT}`)
