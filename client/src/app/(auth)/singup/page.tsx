@@ -1,3 +1,4 @@
+"use client"
 import React from 'react'
 import { Singup } from "../../../components"
 const Singuppage: React.FC = () => {

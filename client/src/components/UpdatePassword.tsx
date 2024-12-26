@@ -1,4 +1,4 @@
-"use client"
+
 import React from 'react'
 import { UpdatePasswordSchema } from "@/Schema"
 import { z } from 'zod'
@@ -14,15 +14,50 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useupdatepassword } from "@/hooks"
+import { toast } from '@/hooks/use-toast'
+import { ToastAction } from './ui/toast'
 type UpdatePasswordvalues = z.infer<typeof UpdatePasswordSchema>
-const UpdatePassword: React.FC = () => {
+type props = {
+    id: string
+}
+const UpdatePassword: React.FC<props> = ({ id }) => {
     const form = useForm<UpdatePasswordvalues>({
         resolver: zodResolver(UpdatePasswordSchema)
     })
+    const { loading, updatepasswordfunc, flg } = useupdatepassword()
 
-    const onSubmit = (data: any) => {
-        console.log(data)
-    }
+
+    const onSubmit = async (data: UpdatePasswordvalues) => {
+        try {
+            const response = await updatepasswordfunc({ password: data.password, id });
+
+
+            if ("response" in response && flg) {
+                const errorMessage = response.response?.data?.message || "An error occurred";
+                console.log(errorMessage, flg);
+
+                toast({
+                    variant: "destructive",
+                    title: "Uh oh! Something went wrong.",
+                    description: errorMessage,
+                    action: <ToastAction altText="Try again">Try again</ToastAction>,
+                });
+            } else if ("data" in response) {
+
+                const successMessage = response.data.message || "Signup successful";
+                toast({
+                    description: successMessage,
+                });
+            } else {
+
+                console.error("Unexpected response format", response);
+            }
+        } catch (error) {
+            console.error("An unexpected error occurred:", error);
+        }
+    };
+
     return (
         <div className='bg-slate-200 flex items-center justify-center h-dvh w-full'>
             <div>
@@ -57,7 +92,39 @@ const UpdatePassword: React.FC = () => {
 
                             )}
                         />
-                        <Button type="submit" className='bg-blue-700 hover:bg-blue-900'>update password</Button>
+                        <Button
+                            type="submit"
+                            className={`bg-blue-700 hover:bg-blue-900 flex items-center justify-center`}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <>
+                                    <svg
+                                        className="animate-spin h-5 w-5 mr-2 text-white"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                        ></circle>
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                        ></path>
+                                    </svg>
+                                    Loading...
+                                </>
+                            ) : (
+                                "Update Password"
+                            )}
+                        </Button>
                     </form>
                 </Form>
             </div>

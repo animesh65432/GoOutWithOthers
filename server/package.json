@@ -21,6 +21,7 @@
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cookies-parser": "^1.2.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-joi-validation": "^6.0.0",
@@ -32,6 +33,7 @@
     "uuid": "^11.0.3"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/express-validator": "^3.0.2",
     "@types/http-status-codes": "^1.2.0",

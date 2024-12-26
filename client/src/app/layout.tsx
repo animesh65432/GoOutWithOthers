@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Oxygen } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster"
 
 
 const getOxygen = Oxygen({
@@ -23,7 +24,8 @@ export default function RootLayout({
       <body
         className={`${getOxygen.className} antialiased`}
       >
-        {children}
+        <main>{children}</main>
+        <Toaster />
       </body>
     </html>
   );

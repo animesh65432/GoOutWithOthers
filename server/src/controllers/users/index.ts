@@ -99,7 +99,7 @@ const forgetpassword = async (req: Request, res: Response) => {
             return
         }
 
-        const forgetpassword = db.forgerPassword.create({
+        const forgetpassword = await db.forgerPassword.create({
             data: {
                 userId: user.id,
                 active: true,
@@ -114,6 +114,8 @@ const forgetpassword = async (req: Request, res: Response) => {
             }
         })
 
+        console.log(forgetpassword)
+
         const mailoption = {
             from: process.env.NODEMAILER_EMAIL,
             to: email,
@@ -121,9 +123,8 @@ const forgetpassword = async (req: Request, res: Response) => {
             text: `please reset your password by clicking on the link below http://localhost:4000/resetpassword/${forgetpassword.id}`
         }
 
-        const sendMailtouser = transpoter.sendMail(mailoption)
+        const sendMailtouser = await transpoter.sendMail(mailoption)
 
-        await Promise.all([forgetpassword, sendMailtouser])
 
         handlerResponse(res, StatusCodes.OK, "Email sent successfully", true)
         return
@@ -143,13 +144,13 @@ const updatepassword = async (req: Request, res: Response) => {
         if (!req.params.id) handlerResponse(res, StatusCodes.BAD_REQUEST, "id did not provided", false)
 
 
-        const forgetpassword = await db.forgerPassword.findFirst({
-            where: {
-                id: req.params.id
-            }
-        })
 
-        if (!forgetpassword || !forgetpassword.active) {
+        const forgetpassword = await db.forgerPassword.findUnique({
+            where: { id: req.params.id }
+        })
+        console.log(req.params.id)
+
+        if (!forgetpassword || forgetpassword.active === false) {
             handlerResponse(res, StatusCodes.BAD_REQUEST, "Invalid link or link has experied", false)
             return
         }
