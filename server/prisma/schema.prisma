@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,17 +6,41 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  username  String
-  password String
-  forgetpassword ForgerPassword[]
+  id             Int              @id @default(autoincrement())
+  email          String           @unique
+  username       String           @unique
+  password       String
+  photourl       String?           @default("https://t3.ftcdn.net/jpg/00/64/67/80/360_F_64678017_zUpiZFjj04cnLri7oADnyMH0XBYyQghG.jpg")
+  forgotPassword ForgotPassword[]
+  events         EventsOnUsers[]  
+  createdEvents  Events[]         @relation("UserCreatedEvents")
 }
 
-model ForgerPassword {
-  id   String  @id @default(uuid())
-  user User? @relation(fields: [userId], references: [id])
-  active Boolean @default(false)
-  userId Int
+model ForgotPassword {
+  id      String   @id @default(uuid())
+  user    User?    @relation(fields: [userId], references: [id])
+  active  Boolean  @default(false)
+  userId  Int
+}
+
+model Events {
+  id      Int              @id @default(autoincrement())
+  name    String           @unique
+  loacation String
+  time    DateTime
+  photourl String
+  users   EventsOnUsers[]  
+  madeby  User             @relation("UserCreatedEvents", fields: [madebyId], references: [id])
+  madebyId Int
+}
+
+model EventsOnUsers {
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  event     Events    @relation(fields: [eventId], references: [id])
+  eventId   Int
+
+  @@unique([userId, eventId])
 }

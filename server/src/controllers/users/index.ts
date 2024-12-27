@@ -99,7 +99,7 @@ const forgetpassword = async (req: Request, res: Response) => {
             return
         }
 
-        const forgetpassword = await db.forgerPassword.create({
+        const forgetpassword = await db.forgotPassword.create({
             data: {
                 userId: user.id,
                 active: true,
@@ -145,7 +145,7 @@ const updatepassword = async (req: Request, res: Response) => {
 
 
 
-        const forgetpassword = await db.forgerPassword.findUnique({
+        const forgetpassword = await db.forgotPassword.findUnique({
             where: { id: req.params.id }
         })
         console.log(req.params.id)
@@ -166,7 +166,7 @@ const updatepassword = async (req: Request, res: Response) => {
             }
         })
 
-        await db.forgerPassword.update({
+        await db.forgotPassword.update({
             where: {
                 id: forgetpassword.id
             },
