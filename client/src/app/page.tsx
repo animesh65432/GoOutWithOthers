@@ -1,8 +1,8 @@
-
+import { Events } from "@/components"
 export default function Home() {
   return (
     <>
-      <p>setup for frontend</p>
+      <Events />
     </>
   );
 }

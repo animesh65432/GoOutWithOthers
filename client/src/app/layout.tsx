@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${getOxygen.className} antialiased`}
+        className={`${getOxygen.className} antialiased `}
       >
         <main>{children}</main>
         <Toaster />
